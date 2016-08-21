@@ -1,13 +1,15 @@
 <div ng-switch="calendarMode">
-    <div class="row calendar-navbar">
-        <div class="nav-left col-xs-2">
-            <button type="button" class="btn btn-default btn-sm" ng-click="move(-1)"><i
-                    class="glyphicon glyphicon-chevron-left"></i></button>
+    <div flex layout='row' layout-align='space-between center'>
+        <div>
+            <button type="button" class="md-button md-primary md-fab md-mini" ng-click="move(-1)">
+                <md-icon md-svg-src='arrow-left'></md-icon>
+            </button>
         </div>
-        <div class="calendar-header col-xs-8">{{title}}</div>
-        <div class="nav-right col-xs-2">
-            <button type="button" class="btn btn-default btn-sm" ng-click="move(1)"><i
-                    class="glyphicon glyphicon-chevron-right"></i></button>
+        <div class='md-title'>{{title}}</div>
+        <div>
+            <button type="button" class="md-button md-primary md-fab md-mini " ng-click="move(1)">
+                <md-icon md-svg-src='arrow-right'></md-icon>
+            </button>
         </div>
     </div>
     <dayview ng-switch-when="day"></dayview>

@@ -1,40 +1,32 @@
 <div>
-    <table class="table table-bordered table-fixed monthview-datetable monthview-datetable">
-        <thead>
-        <tr>
-            <th ng-show="showWeeks" class="calendar-week-column text-center">#</th>
-            <th ng-repeat="label in labels track by $index" class="text-center">
-                <small>{{label}}</small>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="row in rows track by $index">
-            <td ng-show="showWeeks" class="calendar-week-column text-center">
-                <small><em>{{ weekNumbers[$index] }}</em></small>
-            </td>
-            <td ng-repeat="dt in row track by dt.date" class="monthview-dateCell" ng-click="select(dt.date)"
-                ng-class="{'text-center':true, 'monthview-current': dt.current&&!dt.selected&&!dt.hasEvent,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected}">
-                <div ng-class="{'text-muted':dt.secondary}">
-                    {{dt.label}}
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div ng-if="showEventDetail" class="event-detail-container">
-        <div class="scrollable" style="height: 200px">
-            <table class="table table-bordered table-striped table-fixed">
-                <tr ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
-                    <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{event.startTime|date: 'HH:mm'}}
-                        -
-                        {{event.endTime|date: 'HH:mm'}}
-                    </td>
-                    <td ng-if="event.allDay" class="monthview-eventdetail-timecolumn">All day</td>
-                    <td class="event-detail" ng-click="eventSelected({event:event})">{{event.title}}</td>
-                </tr>
-                <tr ng-if="!selectedDate.events"><td class="no-event-label">No Events</td></tr>
-            </table>
+    <div layout-fill class="monthview-datetable monthview-datetable">
+        <div flex layout='row'>
+            <div ng-show="showWeeks" class="calendar-week-column text-center">#</div>
+            <div flex-grow layout='column' layout-align='center center' ng-repeat='label in labels track by $index' class='md-body-2'>{{label}}</div>
         </div>
+        <div flex layout='row' ng-repeat="row in rows track by $index" class="calendar-days">
+            <div ng-show='showWeeks' class="calendar-week-column text-center">
+                <small><em>{{ weekNumbers[$index] }}</em></small>
+            </div>
+            <div flex-grow layout='column' layout-align='center center' ng-repeat='dt in row track by dt.date'>
+                <md-button ng-click="select(dt.date)" class='md-default md-icon-button' ng-class="{'secondary': dt.secondary, 'md-warn': dt.selected, 'md-hue-3': dt.current,'md-hue-2': dt.selected, 'md-raised':dt.hasEvent}">{{dt.label}}</md-button>
+            </div>
+        </div>
+    </div>
+    <div ng-if="showEventDetail" class="event-detail-container">
+        <md-list flex>
+            <md-subheader class="md-no-sticky">{{selectedDate.date|date: 'dd MMM, yyyy'}}</md-subheader>
+            <md-list-item class='secondary-button-padding' ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
+                <div class='md-list-item-text' layout='column'>
+                    <md-button ng-if='!event.allDay' class='md-secondary'>{{event.startTime|date: 'HH:mm'}} - {{event.endTime|date: 'HH:mm'}}
+                    </md-button>
+                    <md-button ng-if='event.allDay' class='md-secondary'>All day</md-button>
+                    <p class="event-detail" ng-click="eventSelected({event:event})">{{event.title}}</p>
+                </div>
+                <md-divider></md-divider>
+            </md-list-item>
+            <md-list-item ng-if="!selectedDate.events">
+                <h3 class="no-event-label">No Events</h3></md-list-item>
+        </md-list>
     </div>
 </div>

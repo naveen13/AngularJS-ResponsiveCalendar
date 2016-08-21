@@ -1012,15 +1012,17 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 angular.module("template/rcalendar/calendar.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rcalendar/calendar.html",
     "<div ng-switch=\"calendarMode\">\n" +
-    "    <div class=\"row calendar-navbar\">\n" +
-    "        <div class=\"nav-left col-xs-2\">\n" +
-    "            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"move(-1)\"><i\n" +
-    "                    class=\"glyphicon glyphicon-chevron-left\"></i></button>\n" +
+    "    <div flex layout='row' layout-align='space-between center'>\n" +
+    "        <div>\n" +
+    "            <button type=\"button\" class=\"md-button md-primary md-fab md-mini\" ng-click=\"move(-1)\">\n" +
+    "                <md-icon md-svg-src='arrow-left'></md-icon>\n" +
+    "            </button>\n" +
     "        </div>\n" +
-    "        <div class=\"calendar-header col-xs-8\">{{title}}</div>\n" +
-    "        <div class=\"nav-right col-xs-2\">\n" +
-    "            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"move(1)\"><i\n" +
-    "                    class=\"glyphicon glyphicon-chevron-right\"></i></button>\n" +
+    "        <div class='md-title'>{{title}}</div>\n" +
+    "        <div>\n" +
+    "            <button type=\"button\" class=\"md-button md-primary md-fab md-mini \" ng-click=\"move(1)\">\n" +
+    "                <md-icon md-svg-src='arrow-right'></md-icon>\n" +
+    "            </button>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "    <dayview ng-switch-when=\"day\"></dayview>\n" +
@@ -1032,156 +1034,118 @@ angular.module("template/rcalendar/calendar.html", []).run(["$templateCache", fu
 
 angular.module("template/rcalendar/day.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rcalendar/day.html",
-    "<div>\n" +
-    "    <div class=\"dayview-allday-table\">\n" +
-    "        <div class=\"dayview-allday-label\">\n" +
-    "            all day\n" +
-    "        </div>\n" +
-    "        <div class=\"dayview-allday-content-wrapper\">\n" +
-    "            <table class=\"table table-bordered dayview-allday-content-table\">\n" +
-    "                <tbody>\n" +
-    "                <tr>\n" +
-    "                    <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':allDayEvents}\"\n" +
-    "                        ng-style=\"{height: 25*allDayEvents.length+'px'}\">\n" +
-    "                        <div ng-repeat=\"displayEvent in allDayEvents\" class=\"calendar-event\"\n" +
-    "                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                             ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\">\n" +
-    "                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
-    "                        </div>\n" +
-    "                    </td>\n" +
-    "                    <td ng-if=\"allDayEventGutterWidth>0\" class=\"gutter-column\"\n" +
-    "                        ng-style=\"{width:allDayEventGutterWidth+'px'}\"></td>\n" +
-    "                </tr>\n" +
-    "                </tbody>\n" +
-    "            </table>\n" +
-    "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"scrollable\" style=\"height: 400px\">\n" +
-    "        <table class=\"table table-bordered table-fixed\">\n" +
-    "            <tbody>\n" +
-    "            <tr ng-repeat=\"tm in rows track by $index\">\n" +
-    "                <td class=\"calendar-hour-column text-center\">\n" +
-    "                    {{tm.time | date: formatHourColumn}}\n" +
-    "                </td>\n" +
-    "                <td class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
-    "                    <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                        <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
-    "                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                             ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
-    "                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
-    "                        </div>\n" +
+    "<div class=\"calendar-days\">\n" +
+    "    <md-divider></md-divider>\n" +
+    "    <md-list>\n" +
+    "        <md-list-item flex flex-grow layout='row' layout-align='start center'>\n" +
+    "            <div flex-grow layout-margin ng-repeat=\"displayEvent in allDayEvents\" ng-click=\"eventSelected({event:displayEvent.event})\">\n" +
+    "                <md-toolbar layout-fill class='md-warn'>\n" +
+    "                    <div class='md-body-1' layout-padding>{{displayEvent.event.title}}</div>\n" +
+    "                </md-toolbar>\n" +
+    "            </div>\n" +
+    "        </md-list-item>\n" +
+    "    </md-list>\n" +
+    "    <md-divider></md-divider>\n" +
+    "    <md-list>\n" +
+    "        <md-list-item flex layout='row' layout-align='start center' ng-repeat=\"tm in rows track by $index\">\n" +
+    "            <div class=\"sidebar\">\n" +
+    "                {{tm.time | date: formatHourColumn}}\n" +
+    "            </div>\n" +
+    "            <div flex-grow  ng-click=\"select(tm.time)\">\n" +
+    "                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
+    "                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\" ng-click=\"eventSelected({event:displayEvent.event})\" ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
+    "                        <div layout-fill class='md-body-1' layout-padding>{{displayEvent.event.title}}</div>\n" +
     "                    </div>\n" +
-    "                </td>\n" +
-    "            </tr>\n" +
-    "            </tbody>\n" +
-    "        </table>\n" +
-    "    </div>\n" +
-    "</div>");
+    "                </div>\n" +
+    "                <md-divider></md-divider>\n" +
+    "            </div>\n" +
+    "        </md-list-item>\n" +
+    "    </md-list>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("template/rcalendar/month.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rcalendar/month.html",
     "<div>\n" +
-    "    <table class=\"table table-bordered table-fixed monthview-datetable monthview-datetable\">\n" +
-    "        <thead>\n" +
-    "        <tr>\n" +
-    "            <th ng-show=\"showWeeks\" class=\"calendar-week-column text-center\">#</th>\n" +
-    "            <th ng-repeat=\"label in labels track by $index\" class=\"text-center\">\n" +
-    "                <small>{{label}}</small>\n" +
-    "            </th>\n" +
-    "        </tr>\n" +
-    "        </thead>\n" +
-    "        <tbody>\n" +
-    "        <tr ng-repeat=\"row in rows track by $index\">\n" +
-    "            <td ng-show=\"showWeeks\" class=\"calendar-week-column text-center\">\n" +
+    "    <div layout-fill class=\"monthview-datetable monthview-datetable\">\n" +
+    "        <div flex layout='row'>\n" +
+    "            <div ng-show=\"showWeeks\" class=\"calendar-week-column text-center\">#</div>\n" +
+    "            <div flex-grow layout='column' layout-align='center center' ng-repeat='label in labels track by $index' class='md-body-2'>{{label}}</div>\n" +
+    "        </div>\n" +
+    "        <div flex layout='row' ng-repeat=\"row in rows track by $index\" class=\"calendar-days\">\n" +
+    "            <div ng-show='showWeeks' class=\"calendar-week-column text-center\">\n" +
     "                <small><em>{{ weekNumbers[$index] }}</em></small>\n" +
-    "            </td>\n" +
-    "            <td ng-repeat=\"dt in row track by dt.date\" class=\"monthview-dateCell\" ng-click=\"select(dt.date)\"\n" +
-    "                ng-class=\"{'text-center':true, 'monthview-current': dt.current&&!dt.selected&&!dt.hasEvent,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected}\">\n" +
-    "                <div ng-class=\"{'text-muted':dt.secondary}\">\n" +
-    "                    {{dt.label}}\n" +
-    "                </div>\n" +
-    "            </td>\n" +
-    "        </tr>\n" +
-    "        </tbody>\n" +
-    "    </table>\n" +
-    "    <div ng-if=\"showEventDetail\" class=\"event-detail-container\">\n" +
-    "        <div class=\"scrollable\" style=\"height: 200px\">\n" +
-    "            <table class=\"table table-bordered table-striped table-fixed\">\n" +
-    "                <tr ng-repeat=\"event in selectedDate.events\" ng-if=\"selectedDate.events\">\n" +
-    "                    <td ng-if=\"!event.allDay\" class=\"monthview-eventdetail-timecolumn\">{{event.startTime|date: 'HH:mm'}}\n" +
-    "                        -\n" +
-    "                        {{event.endTime|date: 'HH:mm'}}\n" +
-    "                    </td>\n" +
-    "                    <td ng-if=\"event.allDay\" class=\"monthview-eventdetail-timecolumn\">All day</td>\n" +
-    "                    <td class=\"event-detail\" ng-click=\"eventSelected({event:event})\">{{event.title}}</td>\n" +
-    "                </tr>\n" +
-    "                <tr ng-if=\"!selectedDate.events\"><td class=\"no-event-label\">No Events</td></tr>\n" +
-    "            </table>\n" +
+    "            </div>\n" +
+    "            <div flex-grow layout='column' layout-align='center center' ng-repeat='dt in row track by dt.date'>\n" +
+    "                <md-button ng-click=\"select(dt.date)\" class='md-default md-icon-button' ng-class=\"{'secondary': dt.secondary, 'md-warn': dt.selected, 'md-hue-3': dt.current,'md-hue-2': dt.selected, 'md-raised':dt.hasEvent}\">{{dt.label}}</md-button>\n" +
+    "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
-    "</div>");
+    "    <div ng-if=\"showEventDetail\" class=\"event-detail-container\">\n" +
+    "        <md-list flex>\n" +
+    "            <md-subheader class=\"md-no-sticky\">{{selectedDate.date|date: 'dd MMM, yyyy'}}</md-subheader>\n" +
+    "            <md-list-item class='secondary-button-padding' ng-repeat=\"event in selectedDate.events\" ng-if=\"selectedDate.events\">\n" +
+    "                <div class='md-list-item-text' layout='column'>\n" +
+    "                    <md-button ng-if='!event.allDay' class='md-secondary'>{{event.startTime|date: 'HH:mm'}} - {{event.endTime|date: 'HH:mm'}}\n" +
+    "                    </md-button>\n" +
+    "                    <md-button ng-if='event.allDay' class='md-secondary'>All day</md-button>\n" +
+    "                    <p class=\"event-detail\" ng-click=\"eventSelected({event:event})\">{{event.title}}</p>\n" +
+    "                </div>\n" +
+    "                <md-divider></md-divider>\n" +
+    "            </md-list-item>\n" +
+    "            <md-list-item ng-if=\"!selectedDate.events\">\n" +
+    "                <h3 class=\"no-event-label\">No Events</h3></md-list-item>\n" +
+    "        </md-list>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("template/rcalendar/week.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rcalendar/week.html",
-    "<div>\n" +
-    "    <table class=\"table table-bordered table-fixed weekview-header\">\n" +
-    "        <thead>\n" +
-    "        <tr>\n" +
-    "            <th class=\"calendar-hour-column\"></th>\n" +
-    "            <th ng-repeat=\"dt in dates\" class=\"text-center weekview-header-label\">{{dt.date| date:\n" +
-    "                formatWeekViewDayHeader}}\n" +
-    "            </th>\n" +
-    "            <th ng-if=\"gutterWidth>0\" class=\"gutter-column\" ng-style=\"{width: gutterWidth+'px'}\"></th>\n" +
-    "        </tr>\n" +
-    "        </thead>\n" +
-    "    </table>\n" +
-    "    <div class=\"weekview-allday-table\">\n" +
-    "        <div class=\"weekview-allday-label\">\n" +
-    "            all day\n" +
+    "<div class=\"calendar-days\">\n" +
+    "    <md-divider></md-divider>\n" +
+    "    <header flex layout='row'>\n" +
+    "        <div class=\"sidebar\">Week</div>\n" +
+    "        <div flex flex-grow layout=\"row\" layout-align=\"center center\" ng-repeat=\"dt in dates\" class=\"md-body-2\">{{dt.date| date: formatWeekViewDayHeader}}</div>\n" +
+    "    </header>\n" +
+    "    <md-divider></md-divider>\n" +
+    "    <section flex layout='row'>\n" +
+    "        <div class=\"sidebar\">All Day</div>\n" +
+    "        <div flex-grow flex layout='row' layout-align='start center'>\n" +
+    "            <div flex-grow ng-repeat=\"day in dates track by day.date\">\n" +
+    "                <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\" ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
+    "                    <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\" ng-click=\"eventSelected({event:displayEvent.event})\" ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\">\n" +
+    "                        <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "        <div class=\"weekview-allday-content-wrapper\">\n" +
-    "            <table class=\"table table-bordered table-fixed weekview-allday-content-table\">\n" +
-    "                <tbody>\n" +
-    "                <tr>\n" +
-    "                    <td ng-repeat=\"day in dates track by day.date\" class=\"calendar-cell\">\n" +
-    "                        <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
-    "                             ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
-    "                            <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
-    "                                 ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                 ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\">\n" +
-    "                                <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "    </section>\n" +
+    "    <md-divider></md-divider>\n" +
+    "    <section flex layout='column'>\n" +
+    "        <div flex layout='row' ng-repeat=\"row in rows track by $index\">\n" +
+    "            <div class=\"sidebar\">\n" +
+    "                {{row[0].time | date: formatHourColumn}}\n" +
+    "                <md-divider></md-divider>\n" +
+    "            </div>\n" +
+    "            <div flex-grow flex layout='row' layout-align='start center'>\n" +
+    "                <div flex-grow ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
+    "                    <div class='calendar-event-wrap' ng-repeat=\"displayEvent in tm.events\">\n" +
+    "                        <div class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
+    "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
+    "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\" ng-click=\"eventSelected({event:displayEvent.event})\" ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
+    "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                                </div>\n" +
     "                            </div>\n" +
     "                        </div>\n" +
-    "                    </td>\n" +
-    "                    <td ng-if=\"allDayEventGutterWidth>0\" class=\"gutter-column\"\n" +
-    "                        ng-style=\"{width: allDayEventGutterWidth+'px'}\"></td>\n" +
-    "                </tr>\n" +
-    "                </tbody>\n" +
-    "            </table>\n" +
-    "        </div>\n" +
-    "    </div>\n" +
-    "    <div class=\"scrollable\" style=\"height: 400px\">\n" +
-    "        <table class=\"table table-bordered table-fixed\">\n" +
-    "            <tbody>\n" +
-    "            <tr ng-repeat=\"row in rows track by $index\">\n" +
-    "                <td class=\"calendar-hour-column text-center\">\n" +
-    "                    {{row[0].time | date: formatHourColumn}}\n" +
-    "                </td>\n" +
-    "                <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
-    "                    <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                        <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
-    "                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                             ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
-    "                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
-    "                        </div>\n" +
     "                    </div>\n" +
-    "                </td>\n" +
-    "                <td ng-if=\"normalGutterWidth>0\" class=\"gutter-column\" ng-style=\"{width: normalGutterWidth+'px'}\"></td>\n" +
-    "            </tr>\n" +
-    "            </tbody>\n" +
-    "        </table>\n" +
-    "    </div>\n" +
-    "</div>");
+    "                    <md-divider></md-divider>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </section>\n" +
+    "</div>\n" +
+    "");
 }]);
